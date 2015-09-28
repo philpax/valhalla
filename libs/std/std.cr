@@ -1,3 +1,6 @@
 require "enumerable"
 require "iterator"
 require "int"
+require "comparable"
+require "object"
+require "pointer"
