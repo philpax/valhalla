@@ -1,3 +1,5 @@
 #!/bin/sh
+set -e
+
 ./make
 qemu-system-i386 -cdrom build/valhalla.iso
