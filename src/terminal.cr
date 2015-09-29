@@ -30,6 +30,10 @@ struct Terminal
 		@memory[y*@x_size + x] = (bg.value << 12 | fg.value << 8 | c.ord).to_u16()
 	end
 
+	def puts(x, y, bg, fg, s)
+		s.each_char_with_index { |c, i| self.put(x+i, y, bg, fg, c) }
+	end
+
 	def map!(&block)
 		@y_size.times do |y|
 			@x_size.times do |x|

@@ -6,6 +6,8 @@ module Kernel
 	def main
 		terminal = Terminal.new
 		terminal.clear()
-		terminal.map! { |x, y| {Terminal::Color.new(x % 16), Terminal::Color::Black, ' '} }
+
+		terminal.puts 0, 0, Terminal::Color::Black, Terminal::Color::Magenta, "Valhalla"
+		terminal.puts 0, 1, Terminal::Color::Black, Terminal::Color::White, "a Crystal-based OS"
 	end
 end
