@@ -10,8 +10,10 @@ module Kernel
 
 		$kernel_panic_handler = ->panic(String)
 
-		terminal.puts 0, 0, Terminal::Color::Black, Terminal::Color::Magenta, "Valhalla"
-		terminal.puts 0, 1, Terminal::Color::Black, Terminal::Color::White, "a Crystal-based OS"
+		terminal.write Terminal::Color::Black, Terminal::Color::Magenta, "Valhalla"
+		terminal.write Terminal::Color::Black, Terminal::Color::LightGrey, ": a "
+		terminal.write Terminal::Color::Black, Terminal::Color::White, "Crystal"
+		terminal.write Terminal::Color::Black, Terminal::Color::LightGrey, "-based OS"
 	end
 
 	def panic(msg)

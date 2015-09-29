@@ -1,5 +1,10 @@
 struct Terminal
 	property memory
+	property cursor_x
+	property cursor_y
+
+	@cursor_x :: Int32
+	@cursor_y :: Int32
 
 	enum Color
 		Black = 0,
@@ -24,6 +29,8 @@ struct Terminal
 		@memory = Pointer(UInt16).new(0xB8000_u64)
 		@x_size = 80
 		@y_size = 25
+		@cursor_x = 0
+		@cursor_y = 0
 	end
 
 	def put(x, y, bg, fg, c)
@@ -32,6 +39,27 @@ struct Terminal
 
 	def puts(x, y, bg, fg, s)
 		s.each_char_with_index { |c, i| self.put(x+i, y, bg, fg, c) }
+	end
+
+	def write(bg, fg, c : Char)
+		if c == '\n'
+			@cursor_y += 1 if c == '\n'
+			@cursor_x = 0
+		else
+			self.put(@cursor_x, @cursor_y, bg, fg, c)
+			@cursor_x += 1
+		end
+
+		if cursor_x >= @x_size
+			@cursor_y += 1
+			@cursor_x = @cursor_x.remainder(@x_size)
+		end
+
+		@cursor_y = @cursor_y.remainder(@y_size)
+	end
+
+	def write(bg, fg, s : String)
+		s.each_char { |c| self.write(bg, fg, c) }
 	end
 
 	def map!(&block)
