@@ -14,6 +14,7 @@ cd build
 mkdir -p iso/boot/grub
 cp valhalla.bin iso/boot/valhalla.bin
 cp ../src/grub.cfg iso/boot/grub/grub.cfg
+echo "Hello, world!" > iso/hello_world.txt
 grub-mkrescue -o valhalla.iso iso
 
 cd ..

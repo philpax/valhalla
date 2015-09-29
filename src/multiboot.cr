@@ -34,6 +34,13 @@ lib Multiboot
 		elf : ELF
 	end
 
+	struct Module
+		mod_start : Void*
+		mod_end : Void*
+		str : UInt8*
+		reserved : UInt32
+	end
+
 	struct Information
 		# ------------------------------
 		flags : Flags				# 0
@@ -46,7 +53,7 @@ lib Multiboot
 		cmdline : UInt8*			# 16
 		# ------------------------------
 		mods_count : UInt32			# 20
-		mods_addr : Void*			# 24
+		mods_addr : Module*			# 24
 		# ------------------------------
 		symbols : Symbols  			# 28
 		# ------------------------------
