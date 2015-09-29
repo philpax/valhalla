@@ -85,7 +85,7 @@ struct Terminal
 		self.write StringView.new(ptr, count)
 	end
 
-	def writeln(value, bg = Color::Black, fg = Color::LightGrey)
+	def writeln(value = "", bg = Color::Black, fg = Color::LightGrey)
 		self.write value, bg, fg
 		self.write '\n'
 	end

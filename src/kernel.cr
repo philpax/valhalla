@@ -25,11 +25,17 @@ module Kernel
 		if info.flags.memory?
 			terminal.write "Lower memory: ", fg: Terminal::Color::DarkGrey
 			terminal.write info.mem_lower
-			terminal.writeln " bytes"
+			terminal.writeln " kilobytes"
 
 			terminal.write "Upper memory: ", fg: Terminal::Color::DarkGrey
 			terminal.write info.mem_upper
-			terminal.writeln " bytes"
+			terminal.write " kilobytes"
+			if info.mem_upper > 1024
+				terminal.write " ("
+				terminal.write info.mem_upper / 1024
+				terminal.write " megabytes)"
+			end
+			terminal.writeln
 		end
 	end
 
