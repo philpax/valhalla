@@ -4,6 +4,8 @@ FLAGS       equ  MBALIGN | MEMINFO
 MAGIC       equ  0x1BADB002
 CHECKSUM    equ -(MAGIC + FLAGS)
 
+global panic
+
 section .multiboot
 align 4
 	dd MAGIC
@@ -24,6 +26,7 @@ _start:
 
 	extern kmain
 	call kmain
+panic:
 	cli
 	hlt
 _halt:

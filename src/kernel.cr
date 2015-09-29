@@ -18,7 +18,7 @@ module Kernel
 
 	def panic(msg)
 		terminal = @@terminal
-		return unless terminal.is_a? Terminal
+		return CPU.panic() unless terminal.is_a? Terminal
 
 		header_color = Terminal::Color::Red
 
@@ -27,6 +27,6 @@ module Kernel
 		terminal.puts 0, 0, header_color, Terminal::Color::White, "Kernel Panic!"
 		terminal.puts 0, 1, Terminal::Color::Black, Terminal::Color::LightGrey, msg
 
-		nil
+		CPU.panic()
 	end
 end

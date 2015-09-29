@@ -71,9 +71,13 @@ struct DivisionByZero < StackException
   end
 end
 
-$kernel_panic_handler
+lib CPU
+  fun panic() : NoReturn
+end
+
+$kernel_panic_handler = ->(s : String) { CPU.panic() }
 
 def raise(exception)
   handler = $kernel_panic_handler
-  handler.call(exception.message) if handler.is_a?(String -> Nil)
+  handler.call(exception.message)
 end
