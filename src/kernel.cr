@@ -12,8 +12,6 @@ module Kernel
 
 		terminal.puts 0, 0, Terminal::Color::Black, Terminal::Color::Magenta, "Valhalla"
 		terminal.puts 0, 1, Terminal::Color::Black, Terminal::Color::White, "a Crystal-based OS"
-
-		raise DivisionByZero.new
 	end
 
 	def panic(msg)
