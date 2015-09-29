@@ -2,7 +2,7 @@ require "./terminal"
 
 module Kernel
 	extend self
-	@@terminal
+	@@terminal = Terminal.new
 
 	def main
 		terminal = @@terminal = Terminal.new
@@ -18,8 +18,6 @@ module Kernel
 
 	def panic(msg)
 		terminal = @@terminal
-		return CPU.panic() unless terminal.is_a? Terminal
-
 		header_color = Terminal::Color::Red
 
 		terminal.clear
