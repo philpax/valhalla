@@ -26,14 +26,14 @@ struct Terminal
 		@y_size = 25
 	end
 
-	def write(x, y, bg, fg, c)
+	def put(x, y, bg, fg, c)
 		@memory[y*@x_size + x] = (bg.value << 12 | fg.value << 8 | c.ord).to_u16()
 	end
 
 	def map!(&block)
 		@y_size.times do |y|
 			@x_size.times do |x|
-				self.write(x, y, *(yield x, y))
+				self.put(x, y, *(yield x, y))
 			end
 		end
 	end
