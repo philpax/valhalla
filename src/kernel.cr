@@ -1,10 +1,11 @@
 require "./terminal"
+require "./multiboot"
 
 module Kernel
 	extend self
 	@@terminal = Terminal.new
 
-	def main
+	def main(multiboot : Multiboot::Information*)
 		terminal = @@terminal = Terminal.new
 		terminal.clear
 
@@ -13,7 +14,24 @@ module Kernel
 		terminal.write "Valhalla", fg: Terminal::Color::Magenta
 		terminal.write ": a "
 		terminal.write "Crystal", fg: Terminal::Color::White
-		terminal.write "-based OS"
+		terminal.write "-based OS\n"
+
+		info = multiboot.value
+		if info.flags.bootloader_name?
+			terminal.write "Bootloader:   ", fg: Terminal::Color::DarkGrey
+			terminal.write StringView.new(info.bootloader_name)
+			terminal.write '\n'
+		end
+
+		if info.flags.memory?
+			terminal.write "Lower memory: ", fg: Terminal::Color::DarkGrey
+			terminal.write info.mem_lower
+			terminal.write " bytes\n"
+
+			terminal.write "Upper memory: ", fg: Terminal::Color::DarkGrey
+			terminal.write info.mem_upper
+			terminal.write " bytes\n"
+		end
 	end
 
 	def panic(msg)

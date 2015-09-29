@@ -25,6 +25,7 @@ _start:
 	mov esp, stack_top
 
 	extern kmain
+	push ebx
 	call kmain
 panic:
 	cli

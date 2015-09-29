@@ -1,5 +1,5 @@
 require "./kernel"
 
-fun kmain
-	Kernel.main
+fun kmain(multiboot : Multiboot::Information*)
+	Kernel.main(multiboot)
 end
