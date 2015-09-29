@@ -14,23 +14,22 @@ module Kernel
 		terminal.write "Valhalla", fg: Terminal::Color::Magenta
 		terminal.write ": a "
 		terminal.write "Crystal", fg: Terminal::Color::White
-		terminal.write "-based OS\n"
+		terminal.writeln "-based OS"
 
 		info = multiboot.value
 		if info.flags.bootloader_name?
 			terminal.write "Bootloader:   ", fg: Terminal::Color::DarkGrey
-			terminal.write StringView.new(info.bootloader_name)
-			terminal.write '\n'
+			terminal.writeln StringView.new(info.bootloader_name)
 		end
 
 		if info.flags.memory?
 			terminal.write "Lower memory: ", fg: Terminal::Color::DarkGrey
 			terminal.write info.mem_lower
-			terminal.write " bytes\n"
+			terminal.writeln " bytes"
 
 			terminal.write "Upper memory: ", fg: Terminal::Color::DarkGrey
 			terminal.write info.mem_upper
-			terminal.write " bytes\n"
+			terminal.writeln " bytes"
 		end
 	end
 
