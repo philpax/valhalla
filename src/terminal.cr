@@ -43,7 +43,7 @@ struct Terminal
 	end
 
 	def clear(col = Terminal::Color::Black)
-		self.map! { {col, col, ' '} }
+		self.fill_rect(0, 0, @x_size, @y_size, col)
 	end
 
 	def fill_rect(x_pos, y_pos, x_size, y_size, col)
