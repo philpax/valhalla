@@ -58,8 +58,31 @@ struct Terminal
 		@cursor_y = @cursor_y.remainder(@y_size)
 	end
 
-	def write(s : String, bg = Color::Black, fg = Color::LightGrey)
+	def write(s, bg = Color::Black, fg = Color::LightGrey)
 		s.each_char { |c| self.write(c, bg, fg) }
+	end
+
+	def write(num : Int, bg = Color::Black, fg = Color::LightGrey)
+		# Modified version of Int#unsafe_to_s
+	    chars :: UInt8[65]
+		ptr_end = chars.to_unsafe + 64
+		ptr = ptr_end
+
+		neg = num < 0
+
+		while num != 0
+			ptr -= 1
+			ptr.value = (num.remainder(10).abs + '0'.ord).to_u8()
+			num /= 10
+		end
+
+		if neg
+			ptr -= 1
+			ptr.value = '-'.ord.to_u8
+		end
+
+		count = (ptr_end - ptr).to_u32
+		self.write StringView.new(ptr, count)
 	end
 
 	def map!(&block)
