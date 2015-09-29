@@ -65,3 +65,17 @@ end
 def Float64.new(value)
   value.to_f64
 end
+
+fun strlen(str : UInt8*) : UInt32
+  i = 0_u32
+
+  if str.address == 0
+    return i
+  end
+
+  while Pointer(UInt8).new(str.address + i).value != 0
+    i += 1
+  end
+
+  i
+end
