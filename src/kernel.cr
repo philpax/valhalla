@@ -10,10 +10,10 @@ module Kernel
 
 		$kernel_panic_handler = ->panic(String)
 
-		terminal.write Terminal::Color::Black, Terminal::Color::Magenta, "Valhalla"
-		terminal.write Terminal::Color::Black, Terminal::Color::LightGrey, ": a "
-		terminal.write Terminal::Color::Black, Terminal::Color::White, "Crystal"
-		terminal.write Terminal::Color::Black, Terminal::Color::LightGrey, "-based OS"
+		terminal.write "Valhalla", fg: Terminal::Color::Magenta
+		terminal.write ": a "
+		terminal.write "Crystal", fg: Terminal::Color::White
+		terminal.write "-based OS"
 	end
 
 	def panic(msg)
@@ -24,8 +24,8 @@ module Kernel
 
 		terminal.clear
 		terminal.fill_rect 0, 0, 80, 1, header_color
-		terminal.puts 0, 0, header_color, Terminal::Color::White, "Kernel Panic!"
-		terminal.puts 0, 1, Terminal::Color::Black, Terminal::Color::LightGrey, msg
+		terminal.puts 0, 0, "Kernel Panic!", header_color, Terminal::Color::White
+		terminal.puts 0, 1, msg
 
 		CPU.panic()
 	end

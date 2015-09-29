@@ -33,20 +33,20 @@ struct Terminal
 		@cursor_y = 0
 	end
 
-	def put(x, y, bg, fg, c)
+	def put(x, y, c, bg = Color::Black, fg = Color::LightGrey)
 		@memory[y*@x_size + x] = (bg.value << 12 | fg.value << 8 | c.ord).to_u16()
 	end
 
-	def puts(x, y, bg, fg, s)
-		s.each_char_with_index { |c, i| self.put(x+i, y, bg, fg, c) }
+	def puts(x, y, s, bg = Color::Black, fg = Color::LightGrey)
+		s.each_char_with_index { |c, i| self.put(x+i, y, c, bg, fg) }
 	end
 
-	def write(bg, fg, c : Char)
+	def write(c : Char, bg = Color::Black, fg = Color::LightGrey)
 		if c == '\n'
 			@cursor_y += 1 if c == '\n'
 			@cursor_x = 0
 		else
-			self.put(@cursor_x, @cursor_y, bg, fg, c)
+			self.put(@cursor_x, @cursor_y, c, bg, fg)
 			@cursor_x += 1
 		end
 
@@ -58,8 +58,8 @@ struct Terminal
 		@cursor_y = @cursor_y.remainder(@y_size)
 	end
 
-	def write(bg, fg, s : String)
-		s.each_char { |c| self.write(bg, fg, c) }
+	def write(s : String, bg = Color::Black, fg = Color::LightGrey)
+		s.each_char { |c| self.write(c, bg, fg) }
 	end
 
 	def map!(&block)
@@ -77,7 +77,7 @@ struct Terminal
 	def fill_rect(x_pos, y_pos, x_size, y_size, col)
 		y_size.times do |y|
 			x_size.times do |x|
-				self.put(x_pos + x, y_pos + y, col, col, ' ')
+				self.put(x_pos + x, y_pos + y, ' ', col, col)
 			end
 		end
 	end
