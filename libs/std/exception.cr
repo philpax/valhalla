@@ -1,15 +1,15 @@
-class Exception
+struct StackException
   getter message
   getter cause
 
-  def initialize(message = nil : String?, cause = nil : Exception?)
+  def initialize(message = nil : String?, cause = nil : StackException?)
     @message = message
     @cause = cause
   end
 end
 
 module Enumerable(T)
-  class EmptyError < Exception
+  struct EmptyError < StackException
     def initialize(message = "Empty enumerable")
       super(message)
     end
@@ -22,18 +22,18 @@ end
 # a = [:foo, :bar]
 # a[2] #=> IndexError: index out of bounds
 # ```
-class IndexError < Exception
+struct IndexError < StackException
   def initialize(message = "Index out of bounds")
     super(message)
   end
 end
 
-# Raised when the arguments are wrong and there isn't a more specific `Exception` class.
+# Raised when the arguments are wrong and there isn't a more specific `StackException` class.
 #
 # ```
 # [1, 2, 3].take(-4) #=> ArgumentError: attempt to take negative size
 # ```
-class ArgumentError < Exception
+struct ArgumentError < StackException
   def initialize(message = "Argument error")
     super(message)
   end
@@ -44,13 +44,13 @@ end
 # ```
 # [1, "hi"][1] as Int32 #=> TypeCastError: cast to Int32 failed
 # ```
-class TypeCastError < Exception
+struct TypeCastError < StackException
   def initialize(message = "Type Cast error")
     super(message)
   end
 end
 
-class InvalidByteSequenceError < Exception
+struct InvalidByteSequenceError < StackException
   def initialize(message = "Invalid byte sequence in UTF-8 string")
     super(message)
   end
@@ -62,15 +62,18 @@ end
 # h = {"foo" => "bar"}
 # h["baz"] #=> KeyError: Missing hash key: "baz"
 # ```
-class KeyError < Exception
+struct KeyError < StackException
 end
 
-class DivisionByZero < Exception
+struct DivisionByZero < StackException
   def initialize(message = "Division by zero")
     super(message)
   end
 end
 
+$kernel_panic_handler
+
 def raise(exception)
-  # TODO: Kernel panic
+  handler = $kernel_panic_handler
+  handler.call(exception.message) if handler.is_a?(String -> Nil)
 end
