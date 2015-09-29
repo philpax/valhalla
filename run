@@ -1,5 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 ./make
-qemu-system-i386 -cdrom build/valhalla.iso
+
+if [ "$1" == "debug" ]; then
+	qemu-system-i386 -s -S -cdrom build/valhalla.iso -d int,cpu_reset
+else
+	qemu-system-i386 -cdrom build/valhalla.iso
+fi
