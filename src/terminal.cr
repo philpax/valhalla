@@ -68,17 +68,22 @@ struct Terminal
 		ptr_end = chars.to_unsafe + 64
 		ptr = ptr_end
 
-		neg = num < 0
+		if num != 0
+			neg = num < 0
 
-		while num != 0
-			ptr -= 1
-			ptr.value = (num.remainder(10).abs + '0'.ord).to_u8()
-			num /= 10
-		end
+			while num != 0
+				ptr -= 1
+				ptr.value = (num.remainder(10).abs + '0'.ord).to_u8()
+				num /= 10
+			end
 
-		if neg
+			if neg
+				ptr -= 1
+				ptr.value = '-'.ord.to_u8
+			end
+		else
 			ptr -= 1
-			ptr.value = '-'.ord.to_u8
+			ptr.value = '0'.ord.to_u8()
 		end
 
 		count = (ptr_end - ptr).to_u32
