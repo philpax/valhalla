@@ -79,3 +79,12 @@ fun strlen(str : UInt8*) : UInt32
 
   i
 end
+
+fun memset(dest : Void*, ch : Int32, count : LibC::SizeT)
+  i = 0
+  while i < count
+    Pointer(UInt8).new(dest.address + i).value = ch.to_u8()
+    i += 1
+  end
+  dest
+end
