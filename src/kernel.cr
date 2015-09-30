@@ -39,15 +39,16 @@ module Kernel
 		end
 
 		if info.flags.modules?
-			terminal.writeln "Modules:", fg: Terminal::Color::DarkGrey
+			terminal.write "Modules: ", fg: Terminal::Color::DarkGrey
 			info.mods_count.times do |i|
 				mod = info.mods_addr[i]
-				terminal.write "    "
+				terminal.write ", " unless i == 0
 				terminal.write StringView.new(mod.str)
 				terminal.write " ("
 				terminal.write (mod.mod_end - mod.mod_start).to_u32()
-				terminal.writeln " bytes)"
+				terminal.write " bytes)"
 			end
+			terminal.writeln
 		end
 	end
 
