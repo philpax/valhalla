@@ -71,11 +71,12 @@ struct DivisionByZero < StackException
   end
 end
 
+# Fool type deduction into typing the kernel panic handler as NoReturn
 lib CPU
-  fun panic() : NoReturn
+  fun dummy() : NoReturn
 end
 
-$kernel_panic_handler = ->(s : String) { CPU.panic() }
+$kernel_panic_handler = ->(s : String) { CPU.dummy() }
 
 def raise(exception)
   handler = $kernel_panic_handler

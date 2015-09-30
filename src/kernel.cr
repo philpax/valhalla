@@ -2,6 +2,10 @@ require "./terminal"
 require "./multiboot"
 require "./vfs"
 
+lib CPU
+  fun halt() : NoReturn
+end
+
 struct Kernel
 	@terminal :: Terminal
 	@vfs :: VirtualFilesystem | Nil
@@ -84,6 +88,6 @@ struct Kernel
 		@terminal.puts 0, 0, "Kernel Panic!", header_color, Terminal::Color::White
 		@terminal.puts 0, 1, msg
 
-		CPU.panic()
+		CPU.halt()
 	end
 end

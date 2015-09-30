@@ -4,8 +4,6 @@ FLAGS       equ  MBALIGN | MEMINFO
 MAGIC       equ  0x1BADB002
 CHECKSUM    equ -(MAGIC + FLAGS)
 
-global panic
-
 section .multiboot
 align 4
 	dd MAGIC
@@ -19,7 +17,10 @@ stack_bottom:
 stack_top:
 
 section .text
+
+; Start-up, and loop
 global _start
+global halt
 
 _start:
 	mov esp, stack_top
@@ -27,8 +28,12 @@ _start:
 	extern kmain
 	push ebx
 	call kmain
-panic:
+halt:
 	cli
 	hlt
-_halt:
-	jmp _halt
+	jmp halt
+
+; Useful functions
+global dummy
+dummy:
+	ret
