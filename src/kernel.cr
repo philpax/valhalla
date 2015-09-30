@@ -1,5 +1,6 @@
 require "./terminal"
 require "./multiboot"
+require "./vfs"
 
 module Kernel
 	extend self
@@ -46,9 +47,29 @@ module Kernel
 				terminal.write StringView.new(mod.str)
 				terminal.write " ("
 				terminal.write (mod.mod_end - mod.mod_start).to_u32()
-				terminal.write " bytes)"
+				terminal.write " bytes"
+
+				if VirtualFilesystem.valid? mod.mod_start
+					terminal.write ", "
+					terminal.write "vfs", fg: Terminal::Color::Green
+
+					@@vfs = VirtualFilesystem.new(mod.mod_start as UInt8*, mod.mod_end as UInt8*)
+				end
+
+				terminal.write ")"
 			end
 			terminal.writeln
+		end
+
+		vfs = @@vfs
+		if vfs.is_a?(VirtualFilesystem)
+			terminal.writeln "VFS:", fg: Terminal::Color::DarkGrey
+			vfs.each_file do |file, contents|
+				terminal.write " "
+				terminal.write file
+				terminal.write ": "
+				terminal.writeln StringView.new(contents)
+			end
 		end
 	end
 
