@@ -7,6 +7,10 @@ struct StringView
 		@size = size > 0 ? size : strlen(ptr)
 	end
 
+	def initialize(slice : Slice(UInt8))
+		initialize(slice.to_unsafe, slice.size.to_u32)
+	end
+
 	def initialize(s : String)
 		@ptr = s.cstr
 		@size = @bytesize
