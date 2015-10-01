@@ -5,8 +5,9 @@ mkdir -p build
 
 # Build OS
 nasm -felf32 src/boot.s -g -o build/boot.o
+nasm -felf32 src/gdt.s -g -o build/gdt.o
 crystal build src/main.cr -o build/main --cross-compile "none x86" --target "i686-none-elf" --mcpu i686 --debug --release --prelude "std" --link-flags "-m32 -nostdlib"
-i686-elf-ld -T src/linker.ld -o build/valhalla.bin build/boot.o build/main.o
+i686-elf-ld -T src/linker.ld -o build/valhalla.bin build/*.o
 
 # Build tools
 crystal build src/tools/vfs_make.cr -o build/vfs_make
