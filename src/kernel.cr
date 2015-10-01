@@ -1,6 +1,7 @@
 require "./terminal"
 require "./multiboot"
 require "./vfs"
+require "./gdt"
 
 lib CPU
   fun halt() : NoReturn
@@ -11,6 +12,8 @@ struct Kernel
 	@vfs :: VirtualFilesystem | Nil
 
 	def initialize(multiboot : Multiboot::Information*)
+		@gdt = GDT.new
+
 		@terminal = Terminal.new
 		@terminal.clear
 
