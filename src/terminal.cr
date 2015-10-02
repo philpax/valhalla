@@ -115,3 +115,5 @@ struct Terminal
 		end
 	end
 end
+
+$terminal = Terminal.new
