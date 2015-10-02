@@ -2,6 +2,7 @@ require "./terminal"
 require "./multiboot"
 require "./vfs"
 require "./gdt"
+require "./cpuid"
 
 lib CPU
   fun halt() : NoReturn
@@ -20,7 +21,11 @@ struct Kernel
 		$terminal.write "Valhalla", fg: Terminal::Color::Magenta
 		$terminal.write ": a "
 		$terminal.write "Crystal", fg: Terminal::Color::White
-		$terminal.writeln "-based OS"
+		$terminal.write "-based OS, running on "
+
+		name_array = StaticArray(UInt8, 12).new 0_u8
+		CPU.get_vendor_id_string(name_array.to_unsafe)
+		$terminal.writeln StringView.new(name_array.to_unsafe)
 
 		self.load_multiboot multiboot
 
