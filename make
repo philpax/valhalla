@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-mkdir -p build
+rm -rf build
+mkdir build
 
 # Build OS
 nasm -felf32 src/boot.s -g -o build/boot.o
@@ -14,6 +15,7 @@ crystal build src/tools/vfs_make.cr -o build/vfs_make
 
 # Build ISO
 cd build
+mkdir -p iso
 
 # Build VFS
 mkdir -p vfs
