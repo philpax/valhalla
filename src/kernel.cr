@@ -3,9 +3,11 @@ require "./multiboot"
 require "./vfs"
 require "./gdt"
 require "./cpuid"
+require "./idt"
 
 lib CPU
   fun halt() : NoReturn
+  fun make_syscall(argument : Int32) : Void
 end
 
 struct Kernel
@@ -13,6 +15,7 @@ struct Kernel
 
 	def initialize(multiboot : Multiboot::Information*)
 		@gdt = GDT.new
+		@idt = IDT.new
 
 		$terminal.clear
 
@@ -84,6 +87,8 @@ struct Kernel
 			end
 			$terminal.writeln
 		end
+
+		CPU.make_syscall(42)
 	end
 
 	def panic(msg)
