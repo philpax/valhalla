@@ -88,3 +88,7 @@ fun memset(dest : Void*, ch : Int32, count : LibC::SizeT)
   end
   dest
 end
+
+lib CPU
+  fun breakpoint() : Void
+end

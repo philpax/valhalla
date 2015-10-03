@@ -37,3 +37,7 @@ halt:
 global dummy
 dummy:
 	ret
+
+global breakpoint:
+breakpoint:
+	xchg bx, bx

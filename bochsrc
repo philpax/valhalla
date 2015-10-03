@@ -1,0 +1,5 @@
+ata0-master: type=cdrom, path=build/valhalla.iso, status=inserted
+boot: cdrom
+display_library: x, options="gui_debug"
+debug_symbols: file=build/valhalla.sym
+magic_break: enabled=1
