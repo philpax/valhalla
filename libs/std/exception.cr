@@ -78,7 +78,10 @@ end
 
 $kernel_panic_handler = ->(s : String) { CPU.dummy() }
 
-def raise(exception)
-  handler = $kernel_panic_handler
-  handler.call(exception.message)
+def raise(exception : StackException)
+  $kernel_panic_handler.call(exception.message)
+end
+
+def raise(exception : String)
+  $kernel_panic_handler.call(exception)
 end
