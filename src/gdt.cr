@@ -5,26 +5,24 @@ lib CPU
 	fun reload_segments() : Void
 end
 
-# NOTE: Using a global here because there may be a latent Crystal compiler
-# bug in which it allocates space for StaticArrays in the same memory block.
-# This caused issues as the GDT was being overwritten by the IDT.
-$gdt = StaticArray(UInt64, 4).new { 0_u64 }
 struct GDT
 	@tss = CPU::TSS.new
 
 	def initialize()
 		# Flat, untranslated addresses
-		$gdt = StaticArray(UInt64, 4).new { 0_u64 }
-		# Null selector
-		$gdt[0] = self.encode 0_u32, 0, 0_u8
-		# Code selector
-		$gdt[1] = self.encode 0_u32, 0xFFFFFFFF, 0x9A_u8
-		# Data selector
-		$gdt[2] = self.encode 0_u32, 0xFFFFFFFF, 0x92_u8
-		# TSS selector
-		$gdt[3] = self.encode pointerof(@tss).address.to_u32, sizeof(CPU::TSS), 0x89_u8
+		@gdt = StaticArray(UInt64, 4).new { 0_u64 }
+	end
 
-		CPU.load_gdt $gdt.to_unsafe, (sizeof(UInt64) * 4) - 1
+	def load()
+		# Null selector
+		@gdt[0] = self.encode 0_u32, 0, 0_u8
+		# Code selector
+		@gdt[1] = self.encode 0_u32, 0xFFFFFFFF, 0x9A_u8
+		# Data selector
+		@gdt[2] = self.encode 0_u32, 0xFFFFFFFF, 0x92_u8
+		# TSS selector
+		@gdt[3] = self.encode pointerof(@tss).address.to_u32, sizeof(CPU::TSS), 0x89_u8
+		CPU.load_gdt @gdt.to_unsafe, (sizeof(UInt64) * 4) - 1
 		CPU.reload_segments
 	end
 

@@ -17,6 +17,9 @@ struct Kernel
 		@gdt = GDT.new
 		@idt = IDT.new
 
+		@gdt.load
+		@idt.load
+
 		$terminal.clear
 
 		$kernel_panic_handler = ->panic(String)
@@ -41,6 +44,8 @@ struct Kernel
 				$terminal.writeln StringView.new(contents)
 			end
 		end
+
+		CPU.make_syscall(42)
 	end
 
 	def load_multiboot(multiboot : Multiboot::Information*)
@@ -87,8 +92,6 @@ struct Kernel
 			end
 			$terminal.writeln
 		end
-
-		CPU.make_syscall(42)
 	end
 
 	def panic(msg)

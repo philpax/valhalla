@@ -18,7 +18,9 @@ struct IDT
 	def initialize()
 		default_value = IDT.encode ->CPU.isr_def_handler, 0x8E
 		@idt = StaticArray(UInt64, 256).new default_value
+	end
 
+	def load()
 		CPU.load_idt @idt.to_unsafe, sizeof(typeof(@idt))-1
 	end
 
