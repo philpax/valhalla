@@ -41,3 +41,4 @@ dummy:
 global breakpoint:
 breakpoint:
 	xchg bx, bx
+	ret
