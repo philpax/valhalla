@@ -38,3 +38,5 @@ struct IDT
 		(pointerof(descriptor) as UInt64*).value
 	end
 end
+
+$idt = IDT.new

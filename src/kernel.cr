@@ -15,10 +15,9 @@ struct Kernel
 
 	def initialize(multiboot : Multiboot::Information*)
 		@gdt = GDT.new
-		@idt = IDT.new
 
 		@gdt.load
-		@idt.load
+		$idt.load
 
 		$terminal.clear
 
