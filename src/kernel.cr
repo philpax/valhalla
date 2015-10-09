@@ -24,8 +24,9 @@ struct Kernel
 		$terminal.write "-based OS, running on "
 
 		name_array = StaticArray(UInt8, 12).new 0_u8
-		CPU.get_vendor_id_string(name_array.to_unsafe)
-		$terminal.writeln StringView.new(name_array.to_unsafe)
+		name_view = StringView.new name_array.to_slice
+		CPUID.get_vendor_id_string name_view
+		$terminal.writeln name_view
 
 		self.load_multiboot multiboot
 

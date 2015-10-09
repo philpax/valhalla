@@ -1,5 +1,5 @@
-global get_vendor_id_string
-get_vendor_id_string:
+global cpuid_get_vendor_id_string
+cpuid_get_vendor_id_string:
 	mov eax, 0
 	cpuid
 	mov eax, [esp+4]
