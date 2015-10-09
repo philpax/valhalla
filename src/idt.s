@@ -54,8 +54,8 @@ syscall_dispatcher:
 	popa
 	iret
 
-global make_syscall
-make_syscall:
+global syscall
+syscall:
 	mov edx, [esp+8]
 	mov eax, [esp+4]
 	int 80

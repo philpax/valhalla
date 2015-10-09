@@ -5,11 +5,6 @@ require "./gdt"
 require "./cpuid"
 require "./idt"
 
-lib CPU
-  fun halt() : NoReturn
-  fun make_syscall(function : Int32, parameter : Void*) : Void
-end
-
 struct Kernel
 	@vfs :: VirtualFilesystem | Nil
 
@@ -44,7 +39,7 @@ struct Kernel
 			end
 		end
 
-		CPU.make_syscall(42, nil)
+		CPU.syscall(42, nil)
 	end
 
 	def load_multiboot(multiboot : Multiboot::Information*)
