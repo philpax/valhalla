@@ -2,6 +2,9 @@ struct StringView
 	@ptr :: UInt8*
 	@size :: UInt32
 
+	getter :ptr
+	getter :size
+
 	def initialize(ptr : UInt8*, size = 0_u32)
 		@ptr = ptr
 		@size = size > 0 ? size : strlen(ptr)
@@ -36,5 +39,9 @@ struct StringView
 
 	def each_char_with_index(&block)
 		each_byte_with_index { |b, i| yield b.chr, i }
+	end
+
+	def map_byte!
+		@size.times { |i| @ptr[i] = yield i }
 	end
 end
