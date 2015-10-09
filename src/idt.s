@@ -11,12 +11,52 @@ load_idt:
 	lidt [idtr]
 	ret
 
-global isr_def_handler
-isr_def_handler:
+int_error_code dd 0
+int_index db 0
+
+%macro ISR_NO_ERROR_CODE 1
+	global isr%1
+	isr%1:
+		push 0
+		mov int_error_code, 0
+		mov int_index, %1
+		jmp int_dispatcher
+%endmacro
+
+%macro ISR_ERROR_CODE 1
+	global isr%1
+	isr%1:
+		mov int_error_code, [esp]
+		mov int_index, %1
+		jmp int_dispatcher
+%endmacro
+
+extern isr_handler
+global int_dispatcher
+int_dispatcher:
+	pusha
+	push int_error_code
+	push int_index
+	call isr_handler
+	popa
+	add esp, 4 ; Remove error code from stack
+	iret
+
+extern syscall_handler
+global syscall_dispatcher
+syscall_dispatcher:
+	pusha
+	push edx
+	push eax
+	call syscall_handler
+	pop eax
+	pop edx
+	popa
 	iret
 
 global make_syscall
 make_syscall:
+	mov edx, [esp+8]
 	mov eax, [esp+4]
 	int 80
 	ret

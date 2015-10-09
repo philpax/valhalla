@@ -7,7 +7,7 @@ require "./idt"
 
 lib CPU
   fun halt() : NoReturn
-  fun make_syscall(argument : Int32) : Void
+  fun make_syscall(function : Int32, parameter : Void*) : Void
 end
 
 struct Kernel
@@ -44,7 +44,7 @@ struct Kernel
 			end
 		end
 
-		CPU.make_syscall(42)
+		CPU.make_syscall(42, nil)
 	end
 
 	def load_multiboot(multiboot : Multiboot::Information*)

@@ -8,7 +8,8 @@ lib CPU
 		offset_upper : UInt16
 	end
 
-	fun isr_def_handler() : Void
+	fun int_dispatcher() : Void
+	fun syscall_dispatcher() : Void
 	fun load_idt(idt : UInt64*, size : Int32) : Void
 end
 
@@ -16,8 +17,9 @@ struct IDT
 	@idt :: UInt64[256]
 
 	def initialize()
-		default_value = IDT.encode ->CPU.isr_def_handler, 0x8E
+		default_value = IDT.encode ->CPU.int_dispatcher, 0x8E
 		@idt = StaticArray(UInt64, 256).new default_value
+		@idt[80] = IDT.encode ->CPU.syscall_dispatcher, 0x8E
 	end
 
 	def load()
@@ -40,3 +42,16 @@ struct IDT
 end
 
 $idt = IDT.new
+
+fun syscall_handler(function : UInt32, parameter : Void*)
+	$terminal.write "syscall("
+	$terminal.write function
+	$terminal.write ", "
+	$terminal.write parameter.address.to_u32
+	$terminal.writeln ")"
+end
+
+fun isr_handler(vector : UInt8, error_code : UInt32)
+	$terminal.write "Interrupt "
+	$terminal.writeln vector
+end
