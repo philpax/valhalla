@@ -95,6 +95,10 @@ struct Terminal
 		self.write '\n'
 	end
 
+	def write_binary(num : Int, bg = Color::Black, fg = Color::LightGrey)
+		(sizeof(typeof(num))*4).times { |i| self.write (num & (1 << i)) > 0 ? 1 : 0, bg, fg }
+	end
+
 	def map!(&block)
 		@y_size.times do |y|
 			@x_size.times do |x|
