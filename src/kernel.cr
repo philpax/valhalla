@@ -21,13 +21,9 @@ struct Kernel
 		$terminal.write "Valhalla", fg: Terminal::Color::Magenta
 		$terminal.write ": a "
 		$terminal.write "Crystal", fg: Terminal::Color::White
-		$terminal.write "-based OS, running on "
+		$terminal.writeln "-based OS"
 
-		name_array = StaticArray(UInt8, 12).new 0_u8
-		name_view = StringView.new name_array.to_slice
-		CPUID.get_vendor_id_string name_view
-		$terminal.writeln name_view
-
+		self.write_cpuid
 		self.load_multiboot multiboot
 
 		if vfs = @vfs
@@ -41,6 +37,22 @@ struct Kernel
 		end
 
 		CPU.syscall(42, nil)
+	end
+
+	def write_cpuid
+		$terminal.write "CPU brand:    ", fg: Terminal::Color::DarkGrey
+
+		name_array = StaticArray(UInt8, 12).new 0_u8
+		name_view = StringView.new name_array.to_slice
+		CPUID.get_vendor_id_string name_view
+		$terminal.writeln name_view
+
+		features = CPUID.get_feature_information
+
+		$terminal.write "CPU features: ", fg: Terminal::Color::DarkGrey
+		$terminal.write "SSE" if features.includes? CPUID::Features::SSE
+		$terminal.write ", SSE2" if features.includes? CPUID::Features::SSE2
+		$terminal.writeln
 	end
 
 	def load_multiboot(multiboot : Multiboot::Information*)

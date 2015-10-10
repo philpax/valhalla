@@ -4,7 +4,7 @@ set -e
 ./make
 
 if [ "$1" == "debug" ]; then
-	qemu-system-i386 -s -S -cdrom build/valhalla.iso -d int,cpu_reset
+	qemu-system-i386 -s -S -cdrom build/valhalla.iso -d int,cpu_reset -cpu SandyBridge
 else
-	qemu-system-i386 -cdrom build/valhalla.iso -d int,cpu_reset
+	qemu-system-i386 -cdrom build/valhalla.iso -d int,cpu_reset -cpu SandyBridge
 fi
