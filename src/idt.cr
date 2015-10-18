@@ -11,15 +11,62 @@ lib CPU
 	fun int_dispatcher() : Void
 	fun syscall_dispatcher() : Void
 	fun load_idt(idt : UInt64*, size : Int32) : Void
+
+	# ISRs
+	fun isr0() : Void
+	fun isr1() : Void
+	fun isr2() : Void
+	fun isr3() : Void
+	fun isr4() : Void
+	fun isr5() : Void
+	fun isr6() : Void
+	fun isr7() : Void
+	fun isr8() : Void
+	fun isr9() : Void
+	fun isr10() : Void
+	fun isr11() : Void
+	fun isr12() : Void
+	fun isr13() : Void
+	fun isr14() : Void
+	fun isr15() : Void
+	fun isr16() : Void
+	fun isr17() : Void
+	fun isr18() : Void
+	fun isr19() : Void
+	fun isr20() : Void
 end
 
 struct IDT
 	@idt :: UInt64[256]
 
+	Task32 = 0x85
+	Interrupt32 = 0x8E
+	Trap32 = 0x8F
+
 	def initialize()
-		default_value = IDT.encode ->CPU.int_dispatcher, 0x8E
-		@idt = StaticArray(UInt64, 256).new default_value
-		@idt[80] = IDT.encode ->CPU.syscall_dispatcher, 0x8E
+		@idt = StaticArray(UInt64, 256).new 0_u64
+		@idt[0] = IDT.encode ->CPU.isr0, Interrupt32
+		@idt[1] = IDT.encode ->CPU.isr1, Trap32
+		@idt[2] = IDT.encode ->CPU.isr2, Interrupt32
+		@idt[3] = IDT.encode ->CPU.isr3, Trap32
+		@idt[4] = IDT.encode ->CPU.isr4, Trap32
+		@idt[5] = IDT.encode ->CPU.isr5, Interrupt32
+		@idt[6] = IDT.encode ->CPU.isr6, Interrupt32
+		@idt[7] = IDT.encode ->CPU.isr7, Interrupt32
+		@idt[8] = IDT.encode ->CPU.isr8, Interrupt32
+		@idt[9] = IDT.encode ->CPU.isr9, Interrupt32
+		@idt[10] = IDT.encode ->CPU.isr10, Interrupt32
+		@idt[11] = IDT.encode ->CPU.isr11, Interrupt32
+		@idt[12] = IDT.encode ->CPU.isr12, Interrupt32
+		@idt[13] = IDT.encode ->CPU.isr13, Interrupt32
+		@idt[14] = IDT.encode ->CPU.isr14, Interrupt32
+		@idt[15] = IDT.encode ->CPU.isr15, Interrupt32
+		@idt[16] = IDT.encode ->CPU.isr16, Interrupt32
+		@idt[17] = IDT.encode ->CPU.isr17, Interrupt32
+		@idt[18] = IDT.encode ->CPU.isr18, Interrupt32
+		@idt[19] = IDT.encode ->CPU.isr19, Interrupt32
+		@idt[20] = IDT.encode ->CPU.isr20, Interrupt32
+		@idt[80] = IDT.encode ->CPU.syscall_dispatcher, Interrupt32
 	end
 
 	def load()
@@ -52,6 +99,6 @@ fun syscall_handler(function : UInt32, parameter : Void*)
 end
 
 fun isr_handler(vector : UInt8, error_code : UInt32)
-	$terminal.write "Interrupt "
-	$terminal.writeln vector
+	# Temporary hack until github.com/manastech/crystal/issues/1768 gets fixed
+	$kernel_panic_handler.call("Unhandled interrupt")
 end

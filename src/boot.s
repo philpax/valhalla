@@ -38,7 +38,15 @@ global dummy
 dummy:
 	ret
 
-global breakpoint:
+global breakpoint
 breakpoint:
 	xchg bx, bx
+	ret
+
+global crash
+crash:
+	xchg bx, bx
+	mov eax, 5
+	mov edx, 0
+	idiv edx
 	ret

@@ -5,6 +5,10 @@ require "./gdt"
 require "./cpuid"
 require "./idt"
 
+lib CPU
+	fun crash()
+end
+
 struct Kernel
 	@vfs :: VirtualFilesystem | Nil
 
@@ -36,7 +40,7 @@ struct Kernel
 			end
 		end
 
-		CPU.syscall(42, nil)
+		CPU.crash()
 	end
 
 	def write_cpuid
