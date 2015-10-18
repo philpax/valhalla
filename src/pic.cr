@@ -28,29 +28,37 @@ struct PIC
 	end
 
 	def self.remap(master_offset : UInt8, slave_offset : UInt8)
+		# Save original masks
 		a1 = IO.inb PIC1_DATA
 		a2 = IO.inb PIC2_DATA
 
+		# Start the initialisation sequence for master and slave
 		IO.out PIC1_COMMAND, ICW1_INIT + ICW1_ICW4
 		IO.wait
 		IO.out PIC2_COMMAND, ICW1_INIT + ICW1_ICW4
 		IO.wait
 
+		# Communicate the new offsets
 		IO.out PIC1_DATA, master_offset
 		IO.wait
 		IO.out PIC2_DATA, slave_offset
 		IO.wait
 
+		# Notify Master PIC of Slave PIC's location
 		IO.out PIC1_DATA, 4
 		IO.wait
+
+		# Notify Slave PIC of its cascade identity
 		IO.out PIC2_DATA, 2
 		IO.wait
 
+		# Tell both PICs to operate in 8086 mode
 		IO.out PIC1_DATA, ICW4_8086
 		IO.wait
 		IO.out PIC2_DATA, ICW4_8086
 		IO.wait
 
+		# Restore the masks
 		IO.out PIC1_DATA, a1
 		IO.out PIC2_DATA, a2
 	end
