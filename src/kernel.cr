@@ -6,10 +6,6 @@ require "./cpuid"
 require "./idt"
 require "./pic"
 
-lib CPU
-	fun crash()
-end
-
 struct Kernel
 	@vfs :: VirtualFilesystem | Nil
 
@@ -42,7 +38,8 @@ struct Kernel
 			end
 		end
 
-		CPU.crash()
+		while true
+		end
 	end
 
 	def write_cpuid
