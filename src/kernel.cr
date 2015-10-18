@@ -4,6 +4,7 @@ require "./vfs"
 require "./gdt"
 require "./cpuid"
 require "./idt"
+require "./pic"
 
 lib CPU
 	fun crash()
@@ -17,6 +18,7 @@ struct Kernel
 
 		@gdt.load
 		$idt.load
+		PIC.remap 0x20_u8, 0x20_u8 + 8_u8
 
 		$terminal.clear
 
