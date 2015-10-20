@@ -18,6 +18,7 @@ int_index db 0
 	global isr%1
 	align 4
 	isr%1:
+		xchg bx, bx
 		push 0
 		pusha
 		mov dword [int_error_code], 0
@@ -40,6 +41,7 @@ extern isr_handler
 global int_dispatcher
 align 4
 int_dispatcher:
+	times 8 nop
 	push dword [int_error_code]
 	push dword [int_index]
 	call isr_handler
@@ -69,6 +71,9 @@ ISR_ERROR_CODE 17
 ISR_NO_ERROR_CODE 18
 ISR_NO_ERROR_CODE 19
 ISR_NO_ERROR_CODE 20
+
+; IRQs
+ISR_NO_ERROR_CODE 32
 
 extern syscall_handler
 global syscall_dispatcher

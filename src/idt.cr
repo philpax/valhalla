@@ -1,3 +1,5 @@
+require "./pic"
+
 lib CPU
 	@[Packed]
 	struct IDTDescriptor
@@ -34,6 +36,9 @@ lib CPU
 	fun isr18() : Void
 	fun isr19() : Void
 	fun isr20() : Void
+
+	# IRQs
+	fun isr32() : Void
 end
 
 struct IDT
@@ -45,6 +50,7 @@ struct IDT
 
 	def initialize()
 		@idt = StaticArray(UInt64, 256).new 0_u64
+		# Reserved interrupts
 		@idt[0] = IDT.encode ->CPU.isr0, Interrupt32
 		@idt[1] = IDT.encode ->CPU.isr1, Trap32
 		@idt[2] = IDT.encode ->CPU.isr2, Interrupt32
@@ -66,6 +72,11 @@ struct IDT
 		@idt[18] = IDT.encode ->CPU.isr18, Interrupt32
 		@idt[19] = IDT.encode ->CPU.isr19, Interrupt32
 		@idt[20] = IDT.encode ->CPU.isr20, Interrupt32
+
+		# IRQs
+		@idt[32] = IDT.encode ->CPU.isr32, Interrupt32
+
+		# Syscall
 		@idt[80] = IDT.encode ->CPU.syscall_dispatcher, Interrupt32
 	end
 
@@ -99,6 +110,55 @@ fun syscall_handler(function : UInt32, parameter : Void*)
 end
 
 fun isr_handler(vector : UInt8, error_code : UInt32)
-	# Temporary hack until github.com/manastech/crystal/issues/1768 gets fixed
-	$kernel_panic_handler.call("Unhandled interrupt")
+	case vector
+		when 0
+			$kernel_panic_handler.call "Divide error"
+		when 1
+			$kernel_panic_handler.call "Debug exception"
+		when 2
+			$kernel_panic_handler.call "Non-maskable interrupt"
+		when 3
+			$kernel_panic_handler.call "Breakpoint"
+		when 4
+			$kernel_panic_handler.call "Overflow"
+		when 5
+			$kernel_panic_handler.call "BOUND range exceeded"
+		when 6
+			$kernel_panic_handler.call "Invalid upcode"
+		when 7
+			$kernel_panic_handler.call "Device not available"
+		when 8
+			$kernel_panic_handler.call "Double fault"
+		when 9
+			$kernel_panic_handler.call "Coprocessor Segment Overrun"
+		when 10
+			$kernel_panic_handler.call "Invalid TSS"
+		when 11
+			$kernel_panic_handler.call "Segment Not Present"
+		when 12
+			$kernel_panic_handler.call "Stack-Segment Fault"
+		when 13
+			$kernel_panic_handler.call "General Protection Fault"
+		when 14
+			$kernel_panic_handler.call "Page Fault"
+		when 15
+			$kernel_panic_handler.call "Reserved"
+		when 16
+			$kernel_panic_handler.call "x87 FPU error"
+		when 17
+			$kernel_panic_handler.call "Alignment Check"
+		when 18
+			$kernel_panic_handler.call "Machine Check"
+		when 19
+			$kernel_panic_handler.call "SIMD Floating-Point Exception"
+		when 20
+			$kernel_panic_handler.call "Virtualization Exception"
+		when 32
+			$terminal.writeln "PIC interrupt"
+		else
+			CPU.breakpoint
+			$kernel_panic_handler.call "Unhandled interrupt"
+	end
+
+	PIC.send_eoi_if_necessary vector
 end

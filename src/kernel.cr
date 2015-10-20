@@ -5,21 +5,25 @@ require "./gdt"
 require "./cpuid"
 require "./idt"
 require "./pic"
+require "./pit"
 
 struct Kernel
 	@vfs :: VirtualFilesystem | Nil
 
 	def initialize(multiboot : Multiboot::Information*)
 		@gdt = GDT.new
+		@pit = PIT.new
 
 		@gdt.load
 		$idt.load
-		PIC.remap 0x20_u8, 0x20_u8 + 8_u8
 
-		$terminal.clear
+		CPU.disable_interrupts
+		PIC.remap 0x20_u8, 0x20_u8 + 8_u8
+		PIC.mask_all
 
 		$kernel_panic_handler = ->panic(String)
 
+		$terminal.clear
 		$terminal.write "Valhalla", fg: Terminal::Color::Magenta
 		$terminal.write ": a "
 		$terminal.write "Crystal", fg: Terminal::Color::White
@@ -38,7 +42,13 @@ struct Kernel
 			end
 		end
 
+		@pit.active = true
+		@pit.divider = 0_u16
+		CPU.breakpoint
+		CPU.enable_interrupts
+
 		while true
+			asm("hlt")
 		end
 	end
 
@@ -112,6 +122,7 @@ struct Kernel
 		$terminal.puts 0, 0, "Kernel Panic!", header_color, Terminal::Color::White
 		$terminal.puts 0, 1, msg
 
+		CPU.disable_interrupts()
 		CPU.halt()
 	end
 end

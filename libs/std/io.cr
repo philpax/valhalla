@@ -12,14 +12,16 @@ lib CPU
 end
 
 struct IO
-	def self.out(port : UInt16, value : Int)
-		if value.is_a? UInt8
-			CPU.io_outb port, value
-		elsif value.is_a? UInt16
-			CPU.io_outw port, value
-		elsif value.is_a? UInt32
-			CPU.io_outl port, value
-		end
+	def self.outb(port : UInt16, value : UInt8)
+		CPU.io_outb port, value
+	end
+
+	def self.outw(port : UInt16, value : UInt16)
+		CPU.io_outw port, value
+	end
+
+	def self.outl(port: UInt16, value : UInt32)
+		CPU.io_outl port, value
 	end
 
 	def self.inb(port : UInt16)
