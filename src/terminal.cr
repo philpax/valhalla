@@ -43,7 +43,7 @@ struct Terminal
 
 	def write(c : Char, bg = Color::Black, fg = Color::LightGrey)
 		if c == '\n'
-			@cursor_y += 1 if c == '\n'
+			@cursor_y += 1
 			@cursor_x = 0
 		else
 			self.put(@cursor_x, @cursor_y, c, bg, fg)
@@ -55,7 +55,11 @@ struct Terminal
 			@cursor_x = @cursor_x.remainder(@x_size)
 		end
 
-		@cursor_y = @cursor_y.remainder(@y_size)
+		if @cursor_y >= @y_size
+			diff = @cursor_y - @y_size
+			@cursor_y = @y_size - 1
+			memcpy @memory as Void*, (@memory + (diff+1) * @x_size) as Void*, ((@y_size - diff) * @x_size).to_u32
+		end
 	end
 
 	def write(s, bg = Color::Black, fg = Color::LightGrey)
