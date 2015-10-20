@@ -1,21 +1,21 @@
 global io_outb
 io_outb:
-	mov al, [esp+3]
-	mov dx, [esp+2]
+	mov al, [esp+8]
+	mov dx, [esp+4]
 	out dx, al
 	ret
 
 global io_outw
 io_outw:
-	mov ax, [esp+4]
-	mov dx, [esp+2]
+	mov ax, [esp+8]
+	mov dx, [esp+4]
 	out dx, al
 	ret
 
 global io_outl
 io_outl:
-	mov eax, [esp+6]
-	mov dx, [esp+2]
+	mov eax, [esp+8]
+	mov dx, [esp+4]
 	out dx, al
 	ret
 
