@@ -88,3 +88,12 @@ fun memset(dest : Void*, ch : Int32, count : LibC::SizeT)
   end
   dest
 end
+
+fun memcpy(dest : Void*, src : Void*, count : LibC::SizeT)
+  i = 0
+  while i < count
+    Pointer(UInt8).new(dest.address + i).value = Pointer(UInt8).new(src.address + i).value
+    i += 1
+  end
+  dest
+end
