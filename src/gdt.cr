@@ -50,6 +50,6 @@ struct GDT
 		# Encode access
 		target[5] = access
 
-		(pointerof(target) as UInt64*).value
+		(target.to_unsafe as UInt64*).value
 	end
 end
