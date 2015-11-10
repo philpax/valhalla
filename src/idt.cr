@@ -43,6 +43,9 @@ end
 
 struct IDT
 	@idt :: CPU::IDTDescriptor[256]
+	@pit_handler = -> {}
+
+	property pit_handler
 
 	Task32 = 0x85
 	Interrupt32 = 0x8E
@@ -153,7 +156,7 @@ fun isr_handler(vector : UInt8, error_code : UInt32)
 		when 20
 			$kernel_panic_handler.call "Virtualization Exception"
 		when 32
-			$terminal.writeln "PIC interrupt"
+			$idt.pit_handler.call
 		else
 			CPU.breakpoint
 			$kernel_panic_handler.call "Unhandled interrupt"

@@ -29,6 +29,10 @@ struct PIT
 	end
 
 	def initialize
+		$idt.pit_handler = ->handler
+	end
+
+	def handler
 	end
 
 	def active=(active : Bool)
