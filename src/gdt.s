@@ -2,8 +2,8 @@
 gdtr dw 0 ; GDT entry count
 	 dd 0 ; GDT entries location
 
-global load_gdt
-load_gdt:
+global gdt_load
+gdt_load:
 	mov eax, [esp + 4]
 	mov [gdtr + 2], eax
 	mov ax, [esp + 8]
@@ -11,8 +11,8 @@ load_gdt:
 	lgdt [gdtr]
 	ret
 
-global reload_segments
-reload_segments:
+global gdt_reload_segments
+gdt_reload_segments:
 	; Reload CS segment
 	jmp 0x08:reload_CS
 reload_CS:

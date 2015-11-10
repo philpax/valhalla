@@ -12,7 +12,7 @@ lib CPU
 
 	fun int_dispatcher() : Void
 	fun syscall_dispatcher() : Void
-	fun load_idt(idt : CPU::IDTDescriptor*, size : Int32) : Void
+	fun idt_load(idt : CPU::IDTDescriptor*, size : Int32) : Void
 
 	# ISRs
 	fun isr0() : Void
@@ -81,7 +81,7 @@ struct IDT
 	end
 
 	def load()
-		CPU.load_idt @idt.to_unsafe, sizeof(typeof(@idt))-1
+		CPU.idt_load @idt.to_unsafe, sizeof(typeof(@idt))-1
 	end
 
 	def self.encode(handler : -> Void, type_attr : Int)

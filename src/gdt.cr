@@ -1,8 +1,8 @@
 require "./tss"
 
 lib CPU
-	fun load_gdt(ptr : UInt64*, size : Int32) : Void
-	fun reload_segments() : Void
+	fun gdt_load(ptr : UInt64*, size : Int32) : Void
+	fun gdt_reload_segments() : Void
 end
 
 struct GDT
@@ -22,8 +22,8 @@ struct GDT
 		@gdt[2] = self.encode 0_u32, 0xFFFFFFFF, 0x92_u8
 		# TSS selector
 		@gdt[3] = self.encode pointerof(@tss).address.to_u32, sizeof(CPU::TSS), 0x89_u8
-		CPU.load_gdt @gdt.to_unsafe, (sizeof(UInt64) * 4) - 1
-		CPU.reload_segments
+		CPU.gdt_load @gdt.to_unsafe, (sizeof(UInt64) * 4) - 1
+		CPU.gdt_reload_segments
 	end
 
 	def encode(base : UInt32, limit : Int, access : U8)

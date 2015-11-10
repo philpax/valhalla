@@ -2,8 +2,8 @@
 idtr dw 0 ; IDT entry count
 	 dd 0 ; IDT entries location
 
-global load_idt
-load_idt:
+global idt_load
+idt_load:
 	mov eax, [esp + 4]
 	mov [idtr + 2], eax
 	mov ax, [esp + 8]
