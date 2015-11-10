@@ -66,7 +66,10 @@ struct Terminal
 		s.each_char { |c| self.write(c, bg, fg) }
 	end
 
-	def write(num : Int, bg = Color::Black, fg = Color::LightGrey)
+	DIGITS_DOWNCASE = "0123456789abcdefghijklmnopqrstuvwxyz"
+	DIGITS_UPCASE   = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+	def write(num : Int, bg = Color::Black, fg = Color::LightGrey, base = 10)
 		# Modified version of Int#unsafe_to_s
 	    chars :: UInt8[65]
 		ptr_end = chars.to_unsafe + 64
@@ -74,11 +77,12 @@ struct Terminal
 
 		if num != 0
 			neg = num < 0
+			digits = DIGITS_UPCASE.to_unsafe
 
 			while num != 0
 				ptr -= 1
-				ptr.value = (num.remainder(10).abs + '0'.ord).to_u8()
-				num /= 10
+				ptr.value = digits[num.remainder(base).abs]
+				num /= base
 			end
 
 			if neg
