@@ -12,7 +12,7 @@ lib CPU
 
 	fun int_dispatcher() : Void
 	fun syscall_dispatcher() : Void
-	fun load_idt(idt : UInt64*, size : Int32) : Void
+	fun load_idt(idt : CPU::IDTDescriptor*, size : Int32) : Void
 
 	# ISRs
 	fun isr0() : Void
@@ -42,14 +42,14 @@ lib CPU
 end
 
 struct IDT
-	@idt :: UInt64[256]
+	@idt :: CPU::IDTDescriptor[256]
 
 	Task32 = 0x85
 	Interrupt32 = 0x8E
 	Trap32 = 0x8F
 
 	def initialize()
-		@idt = StaticArray(UInt64, 256).new 0_u64
+		@idt = StaticArray(CPU::IDTDescriptor, 256).new CPU::IDTDescriptor.new
 		# Reserved interrupts
 		@idt[0] = IDT.encode ->CPU.isr0, Interrupt32
 		@idt[1] = IDT.encode ->CPU.isr1, Trap32
@@ -94,8 +94,7 @@ struct IDT
 		descriptor.offset_lower = (address & 0x0000FFFF).to_u16
 		descriptor.offset_upper = ((address & 0xFFFF0000) >> 16).to_u16
 
-		# type-pun the struct to a uint64
-		(pointerof(descriptor) as UInt64*).value
+		descriptor
 	end
 end
 
