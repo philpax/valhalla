@@ -41,6 +41,13 @@ lib Multiboot
 		reserved : UInt32
 	end
 
+	struct MemoryMap
+		size : UInt32
+		base_addr : UInt64
+		length : UInt64
+		region_type : UInt32
+	end
+
 	struct Information
 		# ------------------------------
 		flags : Flags				# 0
@@ -58,7 +65,7 @@ lib Multiboot
 		symbols : Symbols  			# 28
 		# ------------------------------
 		mmap_length : UInt32		# 44
-		mmap_addr : Void*			# 48
+		mmap_addr : MemoryMap*		# 48
 		# ------------------------------
 		drives_length : UInt32		# 52
 		drives_addr : Void*			# 56

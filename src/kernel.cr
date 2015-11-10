@@ -112,6 +112,25 @@ struct Kernel
 			end
 			$terminal.writeln
 		end
+
+		if info.flags.memory_map?
+			$terminal.write "Memory map: ", fg: Terminal::Color::DarkGrey
+			map_ptr = multiboot.value.mmap_addr
+			end_ptr = map_ptr + multiboot.value.mmap_length
+			i = 0
+			while map_ptr < end_ptr
+				if map_ptr.value.region_type == 1
+					$terminal.write ", " unless i == 0
+					$terminal.write map_ptr.value.base_addr.to_u32, base: 16
+					$terminal.write " ("
+					$terminal.write map_ptr.value.length.to_u32
+					$terminal.write " bytes)"
+					i += 1
+				end
+				map_ptr = Pointer(Multiboot::MemoryMap).new map_ptr.address + map_ptr.value.size + 4
+			end
+			$terminal.writeln
+		end
 	end
 
 	def panic(msg)
