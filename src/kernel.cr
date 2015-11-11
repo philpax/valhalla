@@ -119,15 +119,20 @@ struct Kernel
 			end_ptr = map_ptr + multiboot.value.mmap_length
 			i = 0
 			while map_ptr < end_ptr
-				if map_ptr.value.region_type == 1
-					$terminal.write ", " unless i == 0
-					$terminal.write map_ptr.value.base_addr.to_u32, base: 16
-					$terminal.write " ("
-					$terminal.write map_ptr.value.length.to_u32
-					$terminal.write " bytes)"
-					i += 1
+				map = map_ptr.value
+				map_ptr = Pointer(Multiboot::MemoryMap).new map_ptr.address + map.size + 4
+
+				if map.length.to_u32 == 0
+					next
 				end
-				map_ptr = Pointer(Multiboot::MemoryMap).new map_ptr.address + map_ptr.value.size + 4
+
+				text_color = map.region_type == 1 ? Terminal::Color::LightGreen : Terminal::Color::LightRed
+				$terminal.write ", " unless i == 0
+				$terminal.write map.base_addr.to_u32, fg: text_color, base: 16
+				$terminal.write " ("
+				$terminal.write map.length.to_u32
+				$terminal.write " bytes)"
+				i += 1
 			end
 			$terminal.writeln
 		end
