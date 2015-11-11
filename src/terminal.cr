@@ -95,7 +95,7 @@ struct Terminal
 		end
 
 		count = (ptr_end - ptr).to_u32
-		self.write StringView.new(ptr, count)
+		self.write StringView.new(ptr, count), bg, fg
 	end
 
 	def writeln(value = "", bg = Color::Black, fg = Color::LightGrey)
