@@ -120,7 +120,7 @@ struct Kernel
 			i = 0
 			while map_ptr < end_ptr
 				map = map_ptr.value
-				map_ptr = Pointer(Multiboot::MemoryMap).new map_ptr.address + map.size + 4
+				map_ptr = map_ptr.advance_bytes map.size + 4
 
 				if map.length.to_u32 == 0
 					next
