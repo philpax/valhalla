@@ -20,7 +20,7 @@ struct IO
 		CPU.io_outw port, value
 	end
 
-	def self.outl(port: UInt16, value : UInt32)
+	def self.outl(port : UInt16, value : UInt32)
 		CPU.io_outl port, value
 	end
 

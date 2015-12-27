@@ -174,14 +174,14 @@ class String
   def byte_at(index)
     index += bytesize if index < 0
     if 0 <= index < bytesize
-      cstr[index]
+      to_unsafe[index]
     else
       yield
     end
   end
 
   def unsafe_byte_at(index)
-    cstr[index]
+    to_unsafe[index]
   end
 
   # Yields each char in this string to the block,
@@ -244,7 +244,7 @@ class String
     reader = Char::Reader.new(self)
     reader.each_with_index do |char, i|
       if reader.pos <= end_pos
-        if i >= offset && (cstr + reader.pos).memcmp(c.cstr, c.bytesize) == 0
+        if i >= offset && (to_unsafe + reader.pos).memcmp(c.to_unsafe, c.bytesize) == 0
           return i
         end
       else
@@ -280,7 +280,7 @@ class String
 
     reader = Char::Reader.new(self)
     reader.each_with_index do |char, i|
-      if i <= end_size && i <= offset && (cstr + reader.pos).memcmp(c.cstr, c.bytesize) == 0
+      if i <= end_size && i <= offset && (to_unsafe + reader.pos).memcmp(c.to_unsafe, c.bytesize) == 0
         last_index = i
       end
     end
@@ -290,7 +290,7 @@ class String
 
   def byte_index(byte : Int, offset = 0)
     offset.upto(bytesize - 1) do |i|
-      if cstr[i] == byte
+      if to_unsafe[i] == byte
         return i
       end
     end
@@ -304,7 +304,7 @@ class String
     end_pos = bytesize - string.bytesize
 
     offset.upto(end_pos) do |pos|
-      if (cstr + pos).memcmp(string.cstr, string.bytesize) == 0
+      if (to_unsafe + pos).memcmp(string.to_unsafe, string.bytesize) == 0
         return pos
       end
     end
@@ -400,7 +400,7 @@ class String
   # end
   # ```
   def each_byte
-    cstr.to_slice(bytesize).each do |byte|
+    to_unsafe.to_slice(bytesize).each do |byte|
       yield byte
     end
     self
@@ -446,7 +446,7 @@ class String
     count = 0
 
     while i < bytesize
-      c = cstr[i]
+      c = to_unsafe[i]
 
       if c < 0x80
         i += 1
@@ -477,27 +477,23 @@ class String
   end
 
   def to_slice
-    Slice.new(cstr, bytesize)
+    Slice.new(to_unsafe, bytesize)
   end
 
   def to_s
     self
   end
 
-  def cstr
+  def to_unsafe
     pointerof(@c)
   end
 
-  def to_unsafe
-    cstr
-  end
-
   def unsafe_byte_slice(byte_offset, count)
-    Slice.new(cstr + byte_offset, count)
+    Slice.new(to_unsafe + byte_offset, count)
   end
 
   def unsafe_byte_slice(byte_offset)
-    Slice.new(cstr + byte_offset, bytesize - byte_offset)
+    Slice.new(to_unsafe + byte_offset, bytesize - byte_offset)
   end
 
   # :nodoc:

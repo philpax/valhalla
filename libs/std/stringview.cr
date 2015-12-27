@@ -15,7 +15,7 @@ struct StringView
 	end
 
 	def initialize(s : String)
-		@ptr = s.cstr
+		@ptr = s.to_unsafe
 		@size = @bytesize
 	end
 

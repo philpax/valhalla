@@ -27,7 +27,7 @@ File.open output, "wb" do |file|
 
     files.each do |f|
         file_node = VFS::FileNode.new
-        file_node.filename.to_unsafe.copy_from f[0].cstr, f[0].size
+        file_node.filename.to_unsafe.copy_from f[0].to_unsafe, f[0].size
         file_node.offset = current_offset.to_u32
         file_node.size = f[1].size.to_u32
 
