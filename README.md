@@ -4,7 +4,7 @@ A basic proof-of-concept kernel written in Crystal.
 ## Prerequisites
 In order to build the kernel, a number of prerequisites are required:
 
-* *Crystal (0.9.0 onwards)*: Required to build the majority of the code. The code is largely limited to newer versions of Crystal, so more recent versions are preferred.
+* *Crystal (0.10.0 onwards)*: Required to build the majority of the code. The code is largely limited to newer versions of Crystal, so more recent versions are preferred.
 * *nasm*: Required for building the assembly code, where appropriate.
 * *i686-elf-ld*: Required for linking together the resulting object files. As we're cross-compiling, life is much easier with a platform-appropriate linker. Such a linker can be built using the binutils section of the following guide: http://wiki.osdev.org/GCC_Cross-Compiler#The_Build
 * *grub-mkrescue*: Required to build an ISO with GRUB2 pre-installed
