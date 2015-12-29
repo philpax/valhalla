@@ -90,7 +90,7 @@
 # ```
 # a = 1
 # b = 2
-# "sum = #{a + b}"        # "sum = 3"
+# "sum = #{a + b}" # "sum = 3"
 # ```
 #
 # This ends up invoking `Object#to_s(IO)` on each expression enclosed by `#{...}`.
@@ -108,8 +108,8 @@ class String
   # Returns the number of bytes in this string.
   #
   # ```
-  # "hello".bytesize         #=> 5
-  # "你好".bytesize          #=> 6
+  # "hello".bytesize # => 5
+  # "你好".bytesize    # => 6
   # ```
   def bytesize
     @bytesize
@@ -188,7 +188,7 @@ class String
   # returns the number of times the block returned a truthy value.
   #
   # ```
-  # "aabbcc".count {|c| ['a', 'b'].includes?(c) } #=> 4
+  # "aabbcc".count { |c| ['a', 'b'].includes?(c) } # => 4
   # ```
   def count
     count = 0
@@ -201,17 +201,17 @@ class String
   # Counts the occurrences of other in this string.
   #
   # ```
-  # "aabbcc".count('a') #=> 2
+  # "aabbcc".count('a') # => 2
   # ```
   def count(other : Char)
-    count {|char| char == other }
+    count { |char| char == other }
   end
 
   # Sets should be a list of strings following the rules
   # described at Char#in_set?. Returns the number of characters
   # in this string that match the given set.
   def count(*sets)
-    count {|char| char.in_set?(*sets) }
+    count { |char| char.in_set?(*sets) }
   end
 
   def empty?
@@ -317,10 +317,10 @@ class String
   # will be the bytesize of this string.
   #
   # ```
-  # "hello".char_index_to_byte_index(1)     #=> 1
-  # "hello".char_index_to_byte_index(5)     #=> 5
-  # "こんにちは".char_index_to_byte_index(1) #=> 3
-  # "こんにちは".char_index_to_byte_index(5) #=> 15
+  # "hello".char_index_to_byte_index(1) # => 1
+  # "hello".char_index_to_byte_index(5) # => 5
+  # "こんにちは".char_index_to_byte_index(1) # => 3
+  # "こんにちは".char_index_to_byte_index(5) # => 15
   # ```
   def char_index_to_byte_index(index)
     reader = Char::Reader.new(self)
@@ -336,8 +336,8 @@ class String
   # Returns true if `str` contains `search`.
   #
   # ```
-  # "Team".includes?('i')             #=> false
-  # "Dysfunctional".includes?("fun")  #=> true
+  # "Team".includes?('i')            # => false
+  # "Dysfunctional".includes?("fun") # => true
   # ```
   def includes?(search : Char | String)
     !!index(search)
@@ -347,7 +347,7 @@ class String
   #
   # ```
   # "ab☃".each_char do |char|
-  #   char #=> 'a', 'b', '☃'
+  #   char # => 'a', 'b', '☃'
   # end
   # ```
   def each_char
@@ -367,9 +367,9 @@ class String
   #
   # ```
   # chars = "ab☃".each_char
-  # chars.next #=> 'a'
-  # chars.next #=> 'b'
-  # chars.next #=> '☃'
+  # chars.next # => 'a'
+  # chars.next # => 'b'
+  # chars.next # => '☃'
   # ```
   def each_char
     CharIterator.new(Char::Reader.new(self))
@@ -379,8 +379,8 @@ class String
   #
   # ```
   # "ab☃".each_char_with_index do |char, index|
-  #   char  #=> 'a', 'b', '☃'
-  #   index #=>  0,   1,   2
+  #   char  # => 'a', 'b', '☃'
+  #   index # => 0,   1,   2
   # end
   # ```
   def each_char_with_index
@@ -396,7 +396,7 @@ class String
   #
   # ```
   # "ab☃".each_byte do |byte|
-  #   byte #=> 97, 98, 226, 152, 131
+  #   byte # => 97, 98, 226, 152, 131
   # end
   # ```
   def each_byte
@@ -410,11 +410,11 @@ class String
   #
   # ```
   # bytes = "ab☃".each_byte
-  # bytes.next #=> 97
-  # bytes.next #=> 98
-  # bytes.next #=> 226
-  # bytes.next #=> 156
-  # bytes.next #=> 131
+  # bytes.next # => 97
+  # bytes.next # => 98
+  # bytes.next # => 226
+  # bytes.next # => 156
+  # bytes.next # => 131
   # ```
   def each_byte
     to_slice.each
@@ -434,8 +434,8 @@ class String
   # Returns the number of unicode codepoints in this string.
   #
   # ```
-  # "hello".size         #=> 5
-  # "你好".size          #=> 2
+  # "hello".size # => 5
+  # "你好".size    # => 2
   # ```
   def size
     if @length > 0 || @bytesize == 0

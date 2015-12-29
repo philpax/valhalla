@@ -20,7 +20,7 @@ end
 #
 # ```
 # a = [:foo, :bar]
-# a[2] #=> IndexError: index out of bounds
+# a[2] # => IndexError: index out of bounds
 # ```
 struct IndexError < StackException
   def initialize(message = "Index out of bounds")
@@ -31,7 +31,7 @@ end
 # Raised when the arguments are wrong and there isn't a more specific `StackException` class.
 #
 # ```
-# [1, 2, 3].take(-4) #=> ArgumentError: attempt to take negative size
+# [1, 2, 3].take(-4) # => ArgumentError: attempt to take negative size
 # ```
 struct ArgumentError < StackException
   def initialize(message = "Argument error")
@@ -42,7 +42,7 @@ end
 # Raised when the type cast failed.
 #
 # ```
-# [1, "hi"][1] as Int32 #=> TypeCastError: cast to Int32 failed
+# [1, "hi"][1] as Int32 # => TypeCastError: cast to Int32 failed
 # ```
 struct TypeCastError < StackException
   def initialize(message = "Type Cast error")
@@ -60,7 +60,7 @@ end
 #
 # ```
 # h = {"foo" => "bar"}
-# h["baz"] #=> KeyError: Missing hash key: "baz"
+# h["baz"] # => KeyError: Missing hash key: "baz"
 # ```
 struct KeyError < StackException
 end
@@ -73,10 +73,10 @@ end
 
 # Fool type deduction into typing the kernel panic handler as NoReturn
 lib CPU
-  fun dummy() : NoReturn
+  fun dummy : NoReturn
 end
 
-$kernel_panic_handler = ->(s : String) { CPU.dummy() }
+$kernel_panic_handler = ->(s : String) { CPU.dummy }
 
 def raise(exception : StackException)
   $kernel_panic_handler.call(exception.message)
