@@ -113,12 +113,13 @@ struct Kernel
       $terminal.writeln
     end
 
-    if info.flags.memory_map?
-      $terminal.write "Memory map: ", fg: Terminal::Color::DarkGrey
-      map_ptr = multiboot.value.mmap_addr
-      end_ptr = map_ptr + multiboot.value.mmap_length
-      i = 0
-      while map_ptr < end_ptr
+    panic "GRUB didn't provide a memory map!" if !info.flags.memory_map?
+
+    $terminal.write "Memory map: ", fg: Terminal::Color::DarkGrey
+    map_ptr = multiboot.value.mmap_addr
+    end_ptr = map_ptr + multiboot.value.mmap_length
+    i = 0
+    while map_ptr < end_ptr
         map = map_ptr.value
         map_ptr = map_ptr.advance_bytes map.size + 4
 
@@ -133,9 +134,8 @@ struct Kernel
         $terminal.write map.length.to_u32
         $terminal.write " bytes)"
         i += 1
-      end
-      $terminal.writeln
     end
+    $terminal.writeln
   end
 
   def panic(msg)
