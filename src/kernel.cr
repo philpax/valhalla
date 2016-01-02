@@ -119,6 +119,9 @@ struct Kernel
     map_ptr = multiboot.value.mmap_addr
     end_ptr = map_ptr + multiboot.value.mmap_length
     i = 0
+
+    max_memory_base = 0
+    max_memory_length = 0
     while map_ptr < end_ptr
         map = map_ptr.value
         map_ptr = map_ptr.advance_bytes map.size + 4
@@ -133,8 +136,21 @@ struct Kernel
         $terminal.write " ("
         $terminal.write map.length.to_u32
         $terminal.write " bytes)"
+
+        if map.length > max_memory_length && map.region_type == 1
+            max_memory_base = map.base_addr
+            max_memory_length = map.length
+        end
+
         i += 1
     end
+    $terminal.writeln
+
+    $terminal.write "Largest contiguous block: "
+    $terminal.write max_memory_base.to_u32, fg: Terminal::Color::LightGreen, base: 16
+    $terminal.write " ("
+    $terminal.write max_memory_length.to_u32
+    $terminal.write " bytes)"
     $terminal.writeln
   end
 
