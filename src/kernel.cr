@@ -123,26 +123,26 @@ struct Kernel
     max_memory_base = 0
     max_memory_length = 0
     while map_ptr < end_ptr
-        map = map_ptr.value
-        map_ptr = map_ptr.advance_bytes map.size + 4
+      map = map_ptr.value
+      map_ptr = map_ptr.advance_bytes map.size + 4
 
-        if map.length.to_u32 == 0
-          next
-        end
+      if map.length.to_u32 == 0
+        next
+      end
 
-        text_color = map.region_type == 1 ? Terminal::Color::LightGreen : Terminal::Color::LightRed
-        $terminal.write ", " unless i == 0
-        $terminal.write map.base_addr.to_u32, fg: text_color, base: 16
-        $terminal.write " ("
-        $terminal.write map.length.to_u32
-        $terminal.write " bytes)"
+      text_color = map.region_type == 1 ? Terminal::Color::LightGreen : Terminal::Color::LightRed
+      $terminal.write ", " unless i == 0
+      $terminal.write map.base_addr.to_u32, fg: text_color, base: 16
+      $terminal.write " ("
+      $terminal.write map.length.to_u32
+      $terminal.write " bytes)"
 
-        if map.length > max_memory_length && map.region_type == 1
-            max_memory_base = map.base_addr
-            max_memory_length = map.length
-        end
+      if map.length > max_memory_length && map.region_type == 1
+        max_memory_base = map.base_addr
+        max_memory_length = map.length
+      end
 
-        i += 1
+      i += 1
     end
     $terminal.writeln
 
