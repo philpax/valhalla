@@ -15,6 +15,7 @@ nm build/valhalla.bin | grep " T " | awk '{ print $1" "$3 }' > build/valhalla.sy
 objcopy --strip-debug build/valhalla.bin
 
 # Build tools
+crystal build src/tools/keymap_make.cr -o build/keymap_make
 crystal build src/tools/vfs_make.cr -o build/vfs_make
 
 # Build ISO
@@ -23,6 +24,7 @@ mkdir -p iso
 
 # Build VFS
 mkdir -p vfs
+./keymap_make vfs/keymap
 echo -n "Hello, world!" > vfs/hello_world.txt
 echo -n "Goodbye, world!" > vfs/goodbye_world.txt
 ./vfs_make vfs iso/vfs.bin
