@@ -33,13 +33,14 @@ struct Kernel
     self.load_multiboot multiboot
 
     if vfs = @vfs
-      $terminal.writeln "VFS:", fg: Terminal::Color::DarkGrey
+      $terminal.write "VFS: ", fg: Terminal::Color::DarkGrey
+      i = 0
       vfs.each_file do |file, contents|
-        $terminal.write " "
+        $terminal.write ", " if i > 0
         $terminal.write file
-        $terminal.write ": "
-        $terminal.writeln StringView.new(contents)
+        i += 1
       end
+      $terminal.writeln
     end
 
     @pit.active = true
