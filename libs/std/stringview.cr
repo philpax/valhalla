@@ -16,7 +16,7 @@ struct StringView
 
   def initialize(s : String)
     @ptr = s.to_unsafe
-    @size = @bytesize
+    @size = s.bytesize.to_u32
   end
 
   def each_byte
@@ -43,5 +43,13 @@ struct StringView
 
   def map_byte!
     @size.times { |i| @ptr[i] = yield i }
+  end
+
+  def ==(b : String)
+    return false if @size != b.bytesize
+    self.each_byte_with_index do |byte, index|
+      return false if b.byte_at?(index) != byte
+    end
+    return true
   end
 end
