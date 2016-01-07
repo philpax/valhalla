@@ -62,6 +62,10 @@ struct Terminal
     end
   end
 
+  def write(value : Bool, bg = Color::Black, fg = Color::LightGrey)
+    self.write value ? "true" : "false", bg, fg
+  end
+
   def write(s, bg = Color::Black, fg = Color::LightGrey)
     s.each_char { |c| self.write(c, bg, fg) }
   end
