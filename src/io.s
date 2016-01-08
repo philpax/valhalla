@@ -21,19 +21,19 @@ io_outl:
 
 global io_inb
 io_inb:
-	mov dx, [esp+2]
+	mov dx, [esp+4]
 	in al, dx
 	ret
 
 global io_inw
 io_inw:
-	mov dx, [esp+2]
+	mov dx, [esp+4]
 	in ax, dx
 	ret
 
 global io_inl
 io_inl:
-	mov dx, [esp+2]
+	mov dx, [esp+4]
 	in eax, dx
 	ret
 
