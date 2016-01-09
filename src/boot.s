@@ -33,22 +33,32 @@ halt:
 	hlt
 	jmp halt
 
+TIMES 5 nop
+
 ; Useful functions
 global dummy
 dummy:
 	ret
+
+TIMES 5 nop
 
 global breakpoint
 breakpoint:
 	xchg bx, bx
 	ret
 
+TIMES 5 nop
+
 global enable_interrupts
 enable_interrupts:
 	sti
 	ret
 
+TIMES 5 nop
+
 global disable_interrupts
 disable_interrupts:
 	cli
 	ret
+
+TIMES 5 nop
