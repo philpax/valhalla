@@ -39,13 +39,16 @@ lib CPU
 
   # IRQs
   fun isr32 : Void
+  fun isr33 : Void
 end
 
 struct IDT
   @idt :: CPU::IDTDescriptor[256]
   @pit_handler = ->{}
+  @kbd_handler = ->{}
 
   property pit_handler
+  property kbd_handler
 
   Task32      = 0x85
   Interrupt32 = 0x8E
@@ -78,6 +81,7 @@ struct IDT
 
     # IRQs
     @idt[32] = IDT.encode ->CPU.isr32, Interrupt32
+    @idt[33] = IDT.encode ->CPU.isr33, Interrupt32
 
     # Syscall
     @idt[80] = IDT.encode ->CPU.syscall_dispatcher, Interrupt32
@@ -157,6 +161,8 @@ fun isr_handler(vector : UInt8, error_code : UInt32)
     $kernel_panic_handler.call "Virtualization Exception"
   when 32
     $idt.pit_handler.call
+  when 33
+    $idt.kbd_handler.call
   else
     CPU.breakpoint
     $kernel_panic_handler.call "Unhandled interrupt"

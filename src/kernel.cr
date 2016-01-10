@@ -6,6 +6,7 @@ require "./cpuid"
 require "./idt"
 require "./pic"
 require "./pit"
+require "./keyboard"
 
 struct Kernel
   @vfs :: VirtualFilesystem | Nil
@@ -32,6 +33,8 @@ struct Kernel
     self.write_cpuid
     self.load_multiboot multiboot
 
+    keymap_file = Nil
+
     if vfs = @vfs
       $terminal.write "VFS: ", fg: Terminal::Color::DarkGrey
       i = 0
@@ -39,12 +42,21 @@ struct Kernel
         $terminal.write ", " if i > 0
         $terminal.write file
         i += 1
+
+        keymap_file = contents if file == "keymap"
       end
       $terminal.writeln
     end
 
     @pit.active = true
     @pit.divider = 0_u16
+
+    if keymap_file.is_a? Nil
+      panic "No keymap found!"
+    elsif keymap_file.is_a? Slice(UInt8)
+      @keyboard = Keyboard.new keymap_file
+    end
+
     CPU.breakpoint
     CPU.enable_interrupts
 
