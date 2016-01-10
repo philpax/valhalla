@@ -24,4 +24,16 @@ struct VirtualFilesystem
       yield filename, contents
     end
   end
+
+  def get(target : String)
+    file = nil
+    each_file do |filename, contents|
+      if filename == target
+        file = contents
+        break
+      end
+    end
+
+    file
+  end
 end
