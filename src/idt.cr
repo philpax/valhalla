@@ -42,13 +42,16 @@ lib CPU
   fun isr33 : Void
 end
 
-struct IDT
-  @idt :: CPU::IDTDescriptor[256]
-  @pit_handler = ->{}
-  @kbd_handler = ->{}
+def dummy(vector)
+  $terminal.write "Unhandled vector "
+  $terminal.writeln vector
+  nil
+end
 
-  property pit_handler
-  property kbd_handler
+struct IDT
+  alias Handler = UInt8 -> Nil
+  @handlers = StaticArray(Handler, 256).new ->dummy(UInt8)
+  @idt :: CPU::IDTDescriptor[256]
 
   Task32      = 0x85
   Interrupt32 = 0x8E
@@ -89,6 +92,14 @@ struct IDT
 
   def load
     CPU.idt_load @idt.to_unsafe, sizeof(typeof(@idt)) - 1
+  end
+
+  def call_handler(vector)
+    @handlers[vector].call vector
+  end
+
+  def set_handler(vector, handler : Handler)
+    @handlers[vector] = handler
   end
 
   def self.encode(handler : -> Void, type_attr : Int)
@@ -159,13 +170,8 @@ fun isr_handler(vector : UInt8, error_code : UInt32)
     $kernel_panic_handler.call "SIMD Floating-Point Exception"
   when 20
     $kernel_panic_handler.call "Virtualization Exception"
-  when 32
-    $idt.pit_handler.call
-  when 33
-    $idt.kbd_handler.call
   else
-    CPU.breakpoint
-    $kernel_panic_handler.call "Unhandled interrupt"
+    $idt.call_handler vector
   end
 
   PIC.send_eoi_if_necessary vector

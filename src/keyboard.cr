@@ -20,11 +20,11 @@ struct Keyboard
     @states = StaticArray(Bool, 256).new false
     @caps = false
 
-    $idt.kbd_handler = ->handler
+    $idt.set_handler 33, ->handler(UInt8)
     self.active = true
   end
 
-  def handler
+  def handler(vector)
     scanCode = IO.inb(INPUT_PORT)
 
     if (scanCode & KEY_RELEASE) != 0
@@ -38,6 +38,8 @@ struct Keyboard
       char = @keymap[2*scanCode + offset].chr
       $terminal.write char if char != 0
     end
+
+    nil
   end
 
   def shift?
