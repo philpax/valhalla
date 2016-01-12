@@ -3,6 +3,8 @@ require "./terminal"
 
 struct Keyboard
   getter active
+  property on_key_up
+  property on_key_down
 
   INPUT_PORT = 0x60_u16
   CMD_PORT = 0x64_u16
@@ -20,6 +22,9 @@ struct Keyboard
     @states = StaticArray(Bool, 256).new false
     @caps = false
 
+    @on_key_up = ->(scanCode: UInt8, char: Char) {}
+    @on_key_down = ->(scanCode: UInt8, char: Char) { $terminal.write char if char != 0 }
+
     $idt.set_handler 33, ->handler(UInt8)
     self.active = true
   end
@@ -33,10 +38,15 @@ struct Keyboard
     else
       @caps = !@caps if scanCode == KEY_CAPS_LOCK
       @states[scanCode] = true
+    end
 
-      offset = uppercase? ? 1 : 0
-      char = @keymap[2*scanCode + offset].chr
-      $terminal.write char if char != 0
+    offset = uppercase? ? 1 : 0
+    char = @keymap[2*scanCode + offset].chr
+
+    if @states[scanCode]
+      @on_key_down.call scanCode, char
+    else
+      @on_key_up.call scanCode, char
     end
 
     nil
