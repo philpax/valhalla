@@ -31,6 +31,8 @@ struct Terminal
     @y_size = 25
     @cursor_x = 0
     @cursor_y = 0
+
+    clear
   end
 
   def put(x, y, c, bg = Color::Black, fg = Color::LightGrey)

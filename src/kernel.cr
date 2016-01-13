@@ -24,7 +24,6 @@ struct Kernel
 
     $kernel_panic_handler = ->panic(String)
 
-    $terminal.clear
     $terminal.write "Valhalla", fg: Terminal::Color::Magenta
     $terminal.write ": a "
     $terminal.write "Crystal", fg: Terminal::Color::White
@@ -48,7 +47,7 @@ struct Kernel
     end
 
     panic "No keymap found!" if keymap_file.is_a? Nil
-    @keyboard = Keyboard.new keymap_file
+    $keyboard.init keymap_file
 
     @pit.active = true
     @pit.divider = 0_u16

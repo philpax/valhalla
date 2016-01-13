@@ -18,15 +18,20 @@ struct Keyboard
     InBuf = 2
   end
 
-  def initialize(@keymap : Slice(UInt8))
+  def initialize
+    @keymap = Slice(UInt8).new Pointer(UInt8).null, 0
     @states = StaticArray(Bool, 256).new false
     @caps = false
 
     @on_key_up = ->(scanCode: UInt8, char: Char) {}
     @on_key_down = ->(scanCode: UInt8, char: Char) { $terminal.write char if char != 0 }
+  end
 
+  def init(keymap : Slice(UInt8))
     $idt.set_handler 33, ->handler(UInt8)
     self.active = true
+
+    @keymap = keymap
   end
 
   def handler(vector)
@@ -77,3 +82,5 @@ struct Keyboard
     @active = active
   end
 end
+
+$keyboard = Keyboard.new
