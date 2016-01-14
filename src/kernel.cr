@@ -7,6 +7,7 @@ require "./idt"
 require "./pic"
 require "./pit"
 require "./keyboard"
+require "./shell"
 
 struct Kernel
   @vfs :: VirtualFilesystem | Nil
@@ -48,6 +49,8 @@ struct Kernel
 
     panic "No keymap found!" if keymap_file.is_a? Nil
     $keyboard.init keymap_file
+
+    @shell = Shell.new
 
     @pit.active = true
     @pit.divider = 0_u16
