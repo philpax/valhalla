@@ -58,9 +58,17 @@ struct Terminal
     end
 
     if @cursor_y >= @y_size
-      diff = @cursor_y - @y_size
+      diff = @cursor_y - @y_size + 1
       @cursor_y = @y_size - 1
-      memcpy @memory as Void*, (@memory + (diff + 1) * @x_size) as Void*, ((@y_size - diff) * @x_size).to_u32
+      (@y_size - diff).times do |i|
+        srcLine = i + 1
+        dstLine = i
+
+        dstPtr = (@memory + dstLine * @x_size) as Void*
+        srcPtr = (@memory + srcLine * @x_size) as Void*
+        memcpy dstPtr, srcPtr, @x_size.to_u32 * sizeof(UInt16)
+      end
+      fill_rect 0, @y_size - diff, @x_size, diff, Color::Black
     end
   end
 
